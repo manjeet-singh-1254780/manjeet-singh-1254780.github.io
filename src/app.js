@@ -982,7 +982,10 @@ export async function downloadReceiptPDFAction() {
 }
 
 export function printReceiptAction() {
-  triggerCleanPrint();
+  if (!currentReceiptData) {
+    currentReceiptData = buildReceiptData(AppState);
+  }
+  triggerCleanPrint(currentReceiptData, showToast);
 }
 
 // --- Dhadi History Modal Controller ---

@@ -308,88 +308,118 @@ export async function downloadReceiptPDF(receiptData, showToast) {
 }
 
 // Trigger Clean Printing of only the Receipt
-export function triggerCleanPrint() {
+export function triggerCleanPrint(receiptData, showToast) {
   const card = document.getElementById('printable-receipt-card');
   if (!card) {
-    window.print();
+    if (showToast) showToast('Receipt voucher not found', 'fa-triangle-exclamation');
     return;
   }
 
-  // Create an isolated hidden iframe for printing to avoid printing app frames or status bars
-  let printFrame = document.getElementById('receipt-print-iframe');
-  if (!printFrame) {
-    printFrame = document.createElement('iframe');
-    printFrame.id = 'receipt-print-iframe';
-    printFrame.style.position = 'fixed';
-    printFrame.style.right = '0';
-    printFrame.style.bottom = '0';
-    printFrame.style.width = '0';
-    printFrame.style.height = '0';
-    printFrame.style.border = '0';
-    document.body.appendChild(printFrame);
+  if (showToast) showToast('Opening Print Slip...', 'fa-print');
+
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // On Android/iOS mobile browsers, window.print triggers the native print dialog
+    try {
+      document.body.classList.add('printing-receipt-mode');
+      if (typeof window.print === 'function') {
+        window.print();
+      } else {
+        throw new Error('window.print not supported');
+      }
+    } catch (err) {
+      console.warn('Mobile print error, downloading PDF instead:', err);
+      if (receiptData) {
+        downloadReceiptPDF(receiptData, showToast);
+      }
+    } finally {
+      setTimeout(() => {
+        document.body.classList.remove('printing-receipt-mode');
+      }, 1200);
+    }
+    return;
   }
 
-  const frameDoc = printFrame.contentWindow.document;
-  frameDoc.open();
-  frameDoc.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Dhadi Wala Receipt</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-      <style>
-        body { margin: 0; padding: 20px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; background: #fff; color: #1e293b; }
-        .printable-receipt-slip { border: 2px solid #0f172a; padding: 24px; border-radius: 12px; background: #fff; max-width: 750px; margin: 0 auto; box-sizing: border-box; }
-        .receipt-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-        .receipt-brand-row { display: flex; align-items: center; gap: 10px; }
-        .receipt-logo-icon { width: 38px; height: 38px; background: #ea580c; color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .receipt-brand-name { font-size: 18px; font-weight: 800; color: #0f172a; }
-        .receipt-brand-tag { font-size: 11px; color: #64748b; font-weight: 600; }
-        .receipt-badge { display: inline-block; background: #ea580c; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
-        .receipt-meta-row { font-size: 11px; color: #475569; margin-top: 2px; }
-        .receipt-divider { height: 2px; background: #e2e8f0; margin: 12px 0 16px 0; }
-        .receipt-parties-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-        .receipt-party-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
-        .party-role-tag { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: #ea580c; background: #ffedd5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
-        .party-name { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
-        .party-detail { font-size: 12px; color: #475569; margin-top: 3px; display: flex; align-items: center; gap: 6px; }
-        .receipt-section-title { font-size: 11px; font-weight: 800; color: #475569; letter-spacing: 0.5px; margin-bottom: 8px; border-left: 3px solid #ea580c; padding-left: 6px; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 12px; }
-        .receipt-table th { background: #f1f5f9; padding: 8px 10px; text-align: left; font-weight: 700; color: #334155; border: 1px solid #cbd5e1; font-size: 11px; }
-        .receipt-table td { padding: 8px 10px; border: 1px solid #e2e8f0; color: #1e293b; }
-        .receipt-table .sub-text { font-size: 10px; color: #64748b; }
-        .receipt-summary-row td { background: #fff7ed; border-top: 2px solid #fed7aa; }
-        .receipt-calc-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; }
-        .calc-line { display: flex; justify-content: space-between; font-size: 12px; color: #475569; margin-bottom: 6px; }
-        .grand-total-line { border-top: 2px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; color: #0f172a; display: flex; justify-content: space-between; align-items: center; }
-        .grand-total-amount { font-size: 18px; font-weight: 800; color: #ea580c; }
-        .amount-in-words { font-size: 11px; color: #475569; margin-top: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0; font-style: italic; }
-        .receipt-signatures-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 36px; padding-top: 10px; }
-        .signature-box { text-align: center; }
-        .sig-line { border-bottom: 1px solid #334155; margin-bottom: 8px; height: 30px; }
-        .sig-title { font-size: 12px; font-weight: 700; color: #1e293b; }
-        .sig-sub { font-size: 10px; color: #64748b; }
-        .receipt-footer-note { text-align: center; font-size: 10px; color: #94a3b8; margin-top: 24px; padding-top: 10px; border-top: 1px solid #f1f5f9; line-height: 1.4; }
-        @media print {
-          body { padding: 0; }
-          .printable-receipt-slip { border: 1px solid #333; }
-        }
-      </style>
-    </head>
-    <body>
-      ${card.outerHTML}
-    </body>
-    </html>
-  `);
-  frameDoc.close();
-
-  setTimeout(() => {
-    try {
-      printFrame.contentWindow.focus();
-      printFrame.contentWindow.print();
-    } catch (e) {
-      console.warn('Frame print error:', e);
-      window.print();
+  // Desktop flow: try clean iframe print first with fallback to window.print
+  try {
+    let printFrame = document.getElementById('receipt-print-iframe');
+    if (!printFrame) {
+      printFrame = document.createElement('iframe');
+      printFrame.id = 'receipt-print-iframe';
+      printFrame.style.position = 'fixed';
+      printFrame.style.right = '0';
+      printFrame.style.bottom = '0';
+      printFrame.style.width = '0';
+      printFrame.style.height = '0';
+      printFrame.style.border = '0';
+      document.body.appendChild(printFrame);
     }
-  }, 400);
+
+    const frameDoc = printFrame.contentWindow.document;
+    frameDoc.open();
+    frameDoc.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Dhadi Wala Receipt</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <style>
+          body { margin: 0; padding: 20px; font-family: 'Plus Jakarta Sans', Arial, sans-serif; background: #fff; color: #1e293b; }
+          .printable-receipt-slip { border: 2px solid #0f172a; padding: 24px; border-radius: 12px; background: #fff; max-width: 750px; margin: 0 auto; box-sizing: border-box; }
+          .receipt-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+          .receipt-brand-row { display: flex; align-items: center; gap: 10px; }
+          .receipt-logo-icon { width: 38px; height: 38px; background: #ea580c; color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+          .receipt-brand-name { font-size: 18px; font-weight: 800; color: #0f172a; }
+          .receipt-brand-tag { font-size: 11px; color: #64748b; font-weight: 600; }
+          .receipt-badge { display: inline-block; background: #ea580c; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+          .receipt-meta-row { font-size: 11px; color: #475569; margin-top: 2px; }
+          .receipt-divider { height: 2px; background: #e2e8f0; margin: 12px 0 16px 0; }
+          .receipt-parties-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+          .receipt-party-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; }
+          .party-role-tag { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: #ea580c; background: #ffedd5; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+          .party-name { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+          .party-detail { font-size: 12px; color: #475569; margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+          .receipt-section-title { font-size: 11px; font-weight: 800; color: #475569; letter-spacing: 0.5px; margin-bottom: 8px; border-left: 3px solid #ea580c; padding-left: 6px; }
+          .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 12px; }
+          .receipt-table th { background: #f1f5f9; padding: 8px 10px; text-align: left; font-weight: 700; color: #334155; border: 1px solid #cbd5e1; font-size: 11px; }
+          .receipt-table td { padding: 8px 10px; border: 1px solid #e2e8f0; color: #1e293b; }
+          .receipt-table .sub-text { font-size: 10px; color: #64748b; }
+          .receipt-summary-row td { background: #fff7ed; border-top: 2px solid #fed7aa; }
+          .receipt-calc-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; }
+          .calc-line { display: flex; justify-content: space-between; font-size: 12px; color: #475569; margin-bottom: 6px; }
+          .grand-total-line { border-top: 2px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; color: #0f172a; display: flex; justify-content: space-between; align-items: center; }
+          .grand-total-amount { font-size: 18px; font-weight: 800; color: #ea580c; }
+          .amount-in-words { font-size: 11px; color: #475569; margin-top: 6px; padding-top: 6px; border-top: 1px solid #e2e8f0; font-style: italic; }
+          .receipt-signatures-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 36px; padding-top: 10px; }
+          .signature-box { text-align: center; }
+          .sig-line { border-bottom: 1px solid #334155; margin-bottom: 8px; height: 30px; }
+          .sig-title { font-size: 12px; font-weight: 700; color: #1e293b; }
+          .sig-sub { font-size: 10px; color: #64748b; }
+          .receipt-footer-note { text-align: center; font-size: 10px; color: #94a3b8; margin-top: 24px; padding-top: 10px; border-top: 1px solid #f1f5f9; line-height: 1.4; }
+          @media print {
+            body { padding: 0; }
+            .printable-receipt-slip { border: 1px solid #333; }
+          }
+        </style>
+      </head>
+      <body>
+        ${card.outerHTML}
+      </body>
+      </html>
+    `);
+    frameDoc.close();
+
+    setTimeout(() => {
+      try {
+        printFrame.contentWindow.focus();
+        printFrame.contentWindow.print();
+      } catch (e) {
+        console.warn('Frame print error, fallback to window.print:', e);
+        window.print();
+      }
+    }, 400);
+  } catch (err) {
+    window.print();
+  }
 }
