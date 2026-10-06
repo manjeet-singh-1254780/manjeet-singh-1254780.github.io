@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dhadi Wala</title>
+    <meta name="description" content="Modern mobile-first labour discovery and digital dhadi workforce management platform for India." />
+    <meta property="og:title" content="Dhadi Wala" />
+    <meta property="og:description" content="Modern mobile-first labour discovery and digital dhadi workforce management platform for India." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#ea580c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Dhadi Wala" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Application Android Native Theme Stylesheet -->
+    <link rel="stylesheet" href="/src/style.css" />
+
+    <!-- Firebase 10.8.0 Compat SDKs for direct browser & WebView compatibility -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  </head>
+  <body>
+    <!-- Android Native Device Frame Container -->
+    <div id="app-viewport">
+
+      <!-- Simulated Android Native Status Bar -->
+      <div class="android-status-bar">
+        <span id="status-bar-time">10:45</span>
+        <div class="status-bar-icons">
+          <i class="fa-solid fa-wifi"></i>
+          <i class="fa-solid fa-signal"></i>
+          <i class="fa-solid fa-battery-three-quarters"></i>
+        </div>
+      </div>
+
+      <!-- Android Top App Bar -->
+      <header class="top-app-bar">
+        <div class="top-app-bar-branding">
+          <div class="brand-logo-circle">
+            <i class="fa-solid fa-helmet-safety"></i>
+          </div>
+          <div class="brand-titles">
+            <span class="brand-title" id="top-bar-app-title">Dhadi Wala</span>
+            <span class="brand-subtitle" id="top-bar-app-subtitle">Labour & Daily Dhadi Register</span>
+          </div>
+        </div>
+        <div class="top-bar-actions">
+          <div class="cloud-status-chip" title="Real-time Firebase Cloud Connection">
+            <span class="cloud-dot" id="cloud-status-dot"></span>
+            <span id="cloud-status-text">Cloud Synced</span>
+          </div>
+          <button class="icon-btn-ghost" id="btn-lang-toggle" onclick="window.DhadiApp.toggleLanguage()" title="Switch Language (English / हिंदी)">
+            हिंदी
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable App Content -->
+      <main id="main-container">
+
+        <!-- 1. SPLASH SCREEN -->
+        <div id="screen-splash">
+          <div class="splash-logo-box">
+            <i class="fa-solid fa-helmet-safety"></i>
+          </div>
+          <h1 class="splash-title">Dhadi Wala</h1>
+          <p class="splash-subtitle">Labour Discovery & Digital Attendance Register</p>
+          <div class="splash-progress-bar">
+            <div class="splash-progress-inner"></div>
+          </div>
+          <div style="font-size: 11px; opacity: 0.8; margin-top: 16px;">Starting Native Engine...</div>
+        </div>
+
+        <!-- 2. AUTHENTICATION SCREENS (LOGIN / SIGNUP / FORGOT) -->
+        <div id="screen-auth" class="screen-view">
+          
+          <!-- LOGIN VIEW -->
+          <div id="auth-login-box">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div class="brand-logo-circle" style="width: 60px; height: 60px; font-size: 30px; margin: 0 auto 12px auto; background: var(--md-sys-color-primary); color: white;">
+                <i class="fa-solid fa-helmet-safety"></i>
+              </div>
+              <h2 style="font-size: 22px; font-weight: 800; color: #1e293b;">Welcome to Dhadi Wala</h2>
+              <p style="font-size: 13px; color: #64748b; margin-top: 4px;">Sign in to manage workers and daily attendance</p>
+            </div>
+
+            <form id="form-login" onsubmit="window.DhadiApp.handleLoginSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="login-email">Email ID</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-envelope input-icon"></i>
+                  <input type="email" id="login-email" class="m3-input" placeholder="contractor@example.com" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="login-password">Password</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="login-password" class="m3-input" placeholder="••••••••" required />
+                  <button type="button" class="trailing-icon-btn" onclick="window.DhadiApp.togglePasswordVisibility('login-password', this)">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                <button type="button" style="background: none; border: none; color: var(--md-sys-color-primary-dark); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="window.DhadiApp.showAuthScreen('forgot')">
+                  Forgot Password?
+                </button>
+              </div>
+
+              <button type="submit" id="btn-login-submit" class="btn-m3-primary" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+              </button>
+
+              <div style="text-align: center; font-size: 13px; color: #64748b;">
+                Don't have an account? 
+                <button type="button" style="background: none; border: none; color: var(--md-sys-color-primary-dark); font-weight: 700; cursor: pointer; padding: 0 4px;" onclick="window.DhadiApp.showAuthScreen('signup')">
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- SIGNUP VIEW -->
+          <div id="auth-signup-box" style="display: none;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <h2 style="font-size: 20px; font-weight: 800; color: #1e293b;">Create New Account</h2>
+              <p style="font-size: 12px; color: #64748b;">Register your contractor or supervisor profile</p>
+            </div>
+
+            <form id="form-signup" onsubmit="window.DhadiApp.handleSignupSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="signup-name">Full Name (पूरा नाम)</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="signup-name" class="m3-input" placeholder="e.g. Ramesh Thekedar" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="signup-email">Email ID</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-envelope input-icon"></i>
+                  <input type="email" id="signup-email" class="m3-input" placeholder="name@email.com" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="signup-mobile">Mobile Number (10 Digits)</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-phone input-icon"></i>
+                  <input type="tel" id="signup-mobile" class="m3-input" placeholder="9876543210" pattern="[6-9][0-9]{9}" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="signup-password">Password (Min 6 Characters)</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="signup-password" class="m3-input" placeholder="••••••••" required />
+                  <button type="button" class="trailing-icon-btn" onclick="window.DhadiApp.togglePasswordVisibility('signup-password', this)">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="signup-repassword">Confirm Password</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-lock input-icon"></i>
+                  <input type="password" id="signup-repassword" class="m3-input" placeholder="••••••••" required />
+                </div>
+              </div>
+
+              <button type="submit" id="btn-signup-submit" class="btn-m3-primary" style="margin-bottom: 14px;">
+                <i class="fa-solid fa-user-plus"></i> Create Account
+              </button>
+
+              <div style="text-align: center; font-size: 13px; color: #64748b;">
+                Already have an account? 
+                <button type="button" style="background: none; border: none; color: var(--md-sys-color-primary-dark); font-weight: 700; cursor: pointer;" onclick="window.DhadiApp.showAuthScreen('login')">
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- FORGOT PASSWORD VIEW -->
+          <div id="auth-forgot-box" style="display: none;">
+            <div style="text-align: center; margin-bottom: 20px;">
+              <h2 style="font-size: 20px; font-weight: 800; color: #1e293b;">Reset Password</h2>
+              <p style="font-size: 12px; color: #64748b;">Enter your registered email to receive reset instructions</p>
+            </div>
+
+            <form id="form-forgot" onsubmit="window.DhadiApp.handleForgotPasswordSubmit(event)">
+              <div class="form-group">
+                <label class="form-label" for="forgot-email">Registered Email ID</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-envelope input-icon"></i>
+                  <input type="email" id="forgot-email" class="m3-input" placeholder="your@email.com" required />
+                </div>
+              </div>
+
+              <button type="submit" class="btn-m3-primary" style="margin-bottom: 14px;">
+                <i class="fa-solid fa-paper-plane"></i> Send Password Reset Link
+              </button>
+
+              <button type="button" class="btn-m3-outline" onclick="window.DhadiApp.showAuthScreen('login')">
+                <i class="fa-solid fa-arrow-left"></i> Back to Login
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+        <!-- 3. HOME DASHBOARD SCREEN -->
+        <div id="screen-home" class="screen-view">
+          
+          <!-- Greeting Card -->
+          <div class="m3-card" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-color: #fed7aa; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span id="home-user-greeting" style="font-size: 17px; font-weight: 800; color: #9a3412;">Namaste 🙏</span>
+                <p style="font-size: 12px; color: #c2410c; margin-top: 2px;">Daily Labour Management & Digital Attendance</p>
+              </div>
+              <div style="font-size: 28px; color: #ea580c;">
+                <i class="fa-solid fa-handshake-angle"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Metrics Grid -->
+          <div class="dashboard-grid">
+            <div class="metric-card" onclick="window.DhadiApp.navigateToTab('labour-live')">
+              <div class="metric-header">
+                <span style="font-size: 12px; font-weight: 600; color: #475569;">Total Labour</span>
+                <div class="metric-icon-box" style="background: #e0f2fe; color: #0284c7;">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              </div>
+              <span class="metric-val" id="stat-total-labour">0</span>
+              <span class="metric-sub">कुल पंजीकृत मज़दूर</span>
+            </div>
+
+            <div class="metric-card" onclick="window.DhadiApp.navigateToTab('labour-live')">
+              <div class="metric-header">
+                <span style="font-size: 12px; font-weight: 600; color: #475569;">Available</span>
+                <div class="metric-icon-box" style="background: #dcfce7; color: #16a34a;">
+                  <i class="fa-solid fa-circle-check"></i>
+                </div>
+              </div>
+              <span class="metric-val" id="stat-available-labour" style="color: #16a34a;">0</span>
+              <span class="metric-sub">उपलब्ध कारीगर 🟢</span>
+            </div>
+
+            <div class="metric-card" onclick="window.DhadiApp.navigateToTab('dhadi-register')">
+              <div class="metric-header">
+                <span style="font-size: 12px; font-weight: 600; color: #475569;">Working Days</span>
+                <div class="metric-icon-box" style="background: #fef3c7; color: #d97706;">
+                  <i class="fa-solid fa-calendar-day"></i>
+                </div>
+              </div>
+              <span class="metric-val" id="stat-current-working-days">0 Days</span>
+              <span class="metric-sub">इस माह की कुल धाड़ी</span>
+            </div>
+
+            <div class="metric-card" onclick="window.DhadiApp.navigateToTab('dhadi-register')">
+              <div class="metric-header">
+                <span style="font-size: 12px; font-weight: 600; color: #475569;">Month Total</span>
+                <div class="metric-icon-box" style="background: #fee2e2; color: #dc2626;">
+                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                </div>
+              </div>
+              <span class="metric-val" id="stat-current-total-dhadi" style="color: #ea580c; font-size: 17px;">₹0</span>
+              <span class="metric-sub">मासिक कुल हिसाब</span>
+            </div>
+          </div>
+
+          <!-- Quick Action Banners -->
+          <div style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 10px;">Quick App Actions</div>
+
+          <div class="action-banner" onclick="window.DhadiApp.navigateToTab('labour-live')">
+            <div class="action-banner-left">
+              <div class="action-banner-icon" style="background: #3b82f6;">
+                <i class="fa-solid fa-people-carry-box"></i>
+              </div>
+              <div>
+                <div class="action-banner-title">Labour Live (कारीगर खोजें)</div>
+                <div class="action-banner-desc">Find skilled masons, carpenters & helpers nearby</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #94a3b8; font-size: 13px;"></i>
+          </div>
+
+          <div class="action-banner" onclick="window.DhadiApp.navigateToTab('dhadi-register')">
+            <div class="action-banner-left">
+              <div class="action-banner-icon" style="background: #10b981;">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <div>
+                <div class="action-banner-title">Dhadi Lekhna (धाड़ी लिखना)</div>
+                <div class="action-banner-desc">Mark daily attendance & auto calculate wages</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #94a3b8; font-size: 13px;"></i>
+          </div>
+
+          <div class="action-banner" onclick="window.DhadiApp.navigateToTab('labour-add')">
+            <div class="action-banner-left">
+              <div class="action-banner-icon" style="background: #f59e0b;">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <div>
+                <div class="action-banner-title">Labour Add (नया कारीगर जोड़ें)</div>
+                <div class="action-banner-desc">Register a new worker profile with daily rate</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: #94a3b8; font-size: 13px;"></i>
+          </div>
+
+          <!-- Top Available Workers Preview -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin: 18px 0 10px 0;">
+            <span style="font-size: 14px; font-weight: 700; color: #334155;">Available Labour Today (उपलब्ध कारीगर)</span>
+            <button style="background: none; border: none; color: var(--md-sys-color-primary-dark); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="window.DhadiApp.navigateToTab('labour-live')">
+              View All <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <div id="home-labour-preview-list">
+            <!-- Rendered by JS -->
+          </div>
+
+        </div>
+
+        <!-- 4. LABOUR LIVE SCREEN -->
+        <div id="screen-labour-live" class="screen-view">
+          
+          <!-- Search Input -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-magnifying-glass input-icon"></i>
+              <input type="text" id="labour-search-input" class="m3-input" placeholder="Search by name, skill, city, or village..." />
+            </div>
+          </div>
+
+          <!-- Horizontal Category Chips -->
+          <div class="chip-scroll" id="category-chips-container">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Filter Accordion Bar -->
+          <div class="m3-card" style="padding: 10px 14px; margin-bottom: 14px; background: white;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+              
+              <!-- Availability filter -->
+              <div style="flex: 1;">
+                <label style="font-size: 10px; font-weight: 700; color: #64748b; display: block; margin-bottom: 3px;">AVAILABILITY</label>
+                <select id="filter-status-select" class="m3-select no-icon" style="padding: 6px 8px; font-size: 12px; height: 34px;">
+                  <option value="all">All Status</option>
+                  <option value="available">🟢 Available (उपलब्ध)</option>
+                  <option value="busy">🔴 Busy (व्यस्त)</option>
+                  <option value="na">🟡 N/A</option>
+                </select>
+              </div>
+
+              <!-- Max Rate filter -->
+              <div style="flex: 1.2;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                  <span style="font-size: 10px; font-weight: 700; color: #64748b;">MAX DAILY RATE</span>
+                  <span id="filter-rate-value" style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-primary-dark);">₹2,000</span>
+                </div>
+                <input type="range" id="filter-rate-slider" min="300" max="2500" step="50" value="2000" style="width: 100%; accent-color: var(--md-sys-color-primary); cursor: pointer;" />
+              </div>
+
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 13px; font-weight: 700; color: #475569;">WORKFORCE DIRECTORY</span>
+            <span id="labour-results-count" style="font-size: 12px; font-weight: 600; color: #94a3b8;">0 found</span>
+          </div>
+
+          <!-- Labour Cards Container -->
+          <div id="labour-live-cards-container">
+            <!-- Rendered by JS -->
+          </div>
+
+        </div>
+
+        <!-- 5. DHADI LEKHNA (DIGITAL DHADI REGISTER) SCREEN -->
+        <div id="screen-dhadi-register" class="screen-view">
+          
+          <!-- Select Worker / Project Dropdown -->
+          <div class="dhadi-worker-selector">
+            <label class="form-label" for="select-dhadi-worker">
+              <i class="fa-solid fa-user-check" style="color: var(--md-sys-color-primary-dark);"></i> Select Worker for Dhadi (कारीगर चुनें)
+            </label>
+            <select id="select-dhadi-worker" class="m3-select no-icon" onchange="window.DhadiApp.handleWorkerChange(this.value)">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+
+          <!-- Month & Year Navigation Bar -->
+          <div class="dhadi-month-nav">
+            <button class="icon-btn-ghost" style="background: #f1f5f9; color: #1e293b;" onclick="window.DhadiApp.changeMonth(-1)" title="Previous Month">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="month-label" id="dhadi-month-display">January 2026</div>
+            <button class="icon-btn-ghost" style="background: #f1f5f9; color: #1e293b;" onclick="window.DhadiApp.changeMonth(1)" title="Next Month">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Payment Inputs Strip -->
+          <div class="m3-card" style="padding: 12px 14px; margin-bottom: 14px;">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 8px;">
+              <div>
+                <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">Rate (दहाड़ी दर)</label>
+                <div class="input-with-icon">
+                  <span style="position: absolute; left: 8px; font-size: 13px; color: #64748b; font-weight: 700;">₹</span>
+                  <input type="number" id="input-dhadi-rate" class="m3-input no-icon" style="padding-left: 22px; font-weight: 700;" placeholder="600" />
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">Advance (खर्चा)</label>
+                <div class="input-with-icon">
+                  <span style="position: absolute; left: 8px; font-size: 13px; color: #64748b; font-weight: 700;">₹</span>
+                  <input type="number" id="input-dhadi-advance" class="m3-input no-icon" style="padding-left: 22px;" placeholder="0" />
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 700; color: #475569; display: block; margin-bottom: 3px;">Bonus (इनाम)</label>
+                <div class="input-with-icon">
+                  <span style="position: absolute; left: 8px; font-size: 13px; color: #64748b; font-weight: 700;">₹</span>
+                  <input type="number" id="input-dhadi-bonus" class="m3-input no-icon" style="padding-left: 22px;" placeholder="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Monthly Attendance List -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 12px; font-weight: 700; color: #64748b;">DAILY ATTENDANCE CALENDAR (तारीख वार हाजिरी)</span>
+            <span style="font-size: 11px; color: #94a3b8;">Tap to toggle</span>
+          </div>
+
+          <div class="calendar-list" id="dhadi-calendar-list">
+            <!-- Dynamic calendar rows rendered here by JS -->
+          </div>
+
+          <!-- Dynamic Payment Summary Card -->
+          <div class="dhadi-calc-card">
+            <div class="calc-row">
+              <span>Total Dhadi Days (कुल हाजिरी):</span>
+              <span id="calc-total-days" style="font-weight: 700; color: white;">0 Days</span>
+            </div>
+            <div class="calc-row">
+              <span>Daily Rate (दहाड़ी दर):</span>
+              <span id="calc-daily-rate" style="font-weight: 700; color: white;">₹0</span>
+            </div>
+            <div class="calc-row">
+              <span>Gross Earned (कुल कमाई):</span>
+              <span id="calc-subtotal" style="font-weight: 700; color: white;">₹0</span>
+            </div>
+            <div class="calc-row">
+              <span>Advance Deducted (खर्चा कटा):</span>
+              <span id="calc-advance" style="color: #f87171; font-weight: 700;">- ₹0</span>
+            </div>
+            <div class="calc-row">
+              <span>Bonus / Overtime (बोनस):</span>
+              <span id="calc-bonus" style="color: #4ade80; font-weight: 700;">+ ₹0</span>
+            </div>
+            <div class="calc-row total-row">
+              <span>NET PAYABLE (कुल देय राशि):</span>
+              <span class="calc-total-badge" id="calc-grand-total">₹0</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+            <button class="btn-m3-primary" onclick="window.DhadiApp.handleSaveDhadiRecord()">
+              <i class="fa-solid fa-floppy-disk"></i> Save Dhadi Register (हिसाब सुरक्षित करें)
+            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <button class="btn-m3-tonal" style="background: #25d366; color: white;" onclick="window.DhadiApp.shareDhadiWhatsApp()">
+                <i class="fa-brands fa-whatsapp"></i> Share WhatsApp Slip
+              </button>
+              <button class="btn-m3-outline" onclick="window.DhadiApp.printDhadiStatement()">
+                <i class="fa-solid fa-print"></i> Print / PDF Receipt
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 6. LABOUR ADD SCREEN -->
+        <div id="screen-labour-add" class="screen-view">
+          <div class="m3-card">
+            <h2 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 4px;">Register New Labour</h2>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 16px;">Add skilled worker profile to live discovery and attendance system</p>
+
+            <form id="form-add-labour">
+              
+              <!-- Photo Upload with Preview -->
+              <label class="form-label">Profile Photo (फ़ोटो लगाएं)</label>
+              <div class="photo-picker-container">
+                <div class="photo-preview-box">
+                  <i class="fa-solid fa-camera" id="labour-photo-placeholder"></i>
+                  <img id="labour-photo-preview" class="photo-preview-img" style="display: none;" alt="Preview">
+                </div>
+                <div style="flex: 1;">
+                  <label for="labour-photo-input" class="btn-m3-outline" style="padding: 8px 12px; font-size: 12px; cursor: pointer; display: inline-flex; width: auto; margin-bottom: 6px;">
+                    <i class="fa-solid fa-upload"></i> Upload From Device
+                  </label>
+                  <input type="file" id="labour-photo-input" accept="image/*" style="display: none;" />
+                  <div style="font-size: 11px; color: #94a3b8;">Or pick a preset avatar below:</div>
+                </div>
+              </div>
+
+              <!-- Avatar Quick Presets -->
+              <div style="display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px;">
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 1">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 2">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 3">
+                <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 4">
+                <img src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 5">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop" class="labour-avatar" style="width: 38px; height: 38px; cursor: pointer;" onclick="window.DhadiApp.selectAvatarPreset(this.src)" title="Preset 6">
+              </div>
+
+              <!-- Name -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-name">Labour / Worker Name * (कारीगर का नाम)</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input type="text" id="input-labour-name" class="m3-input" placeholder="e.g. Ramu Mistri" required />
+                </div>
+              </div>
+
+              <!-- Mobile -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-mobile">Mobile Number * (मोबाइल नंबर)</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-phone input-icon"></i>
+                  <input type="tel" id="input-labour-mobile" class="m3-input" placeholder="9876543210" pattern="[6-9][0-9]{9}" required />
+                </div>
+              </div>
+
+              <!-- Category / Skill -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-category">Skill / Work Category * (काम का प्रकार)</label>
+                <select id="input-labour-category" class="m3-select no-icon">
+                  <option value="mason">Mason (राजमिस्त्री)</option>
+                  <option value="helper">Helper / Beldar (मज़दूर / बेलदार)</option>
+                  <option value="carpenter">Carpenter (बढ़ई)</option>
+                  <option value="painter">Painter (पेंटर)</option>
+                  <option value="electrician">Electrician (इलेक्ट्रीशियन)</option>
+                  <option value="plumber">Plumber (नलसाज / प्लंबर)</option>
+                  <option value="welder">Welder (वेल्डर / लोहार)</option>
+                  <option value="farm_labour">Farm Labour (खेती मज़दूर)</option>
+                  <option value="driver">Driver / Tractor (ड्राइवर)</option>
+                  <option value="other">Other (अन्य कारीगर)</option>
+                </select>
+              </div>
+
+              <!-- Daily Wage -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-rate">Daily Payment / Wage Rate (दहाड़ी ₹ प्रति दिन) *</label>
+                <div class="input-with-icon">
+                  <span style="position: absolute; left: 14px; font-weight: 700; color: #64748b;">₹</span>
+                  <input type="number" id="input-labour-rate" class="m3-input no-icon" style="padding-left: 32px;" placeholder="650" min="100" max="10000" required />
+                </div>
+              </div>
+
+              <!-- City & Village -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="form-group">
+                  <label class="form-label" for="input-labour-city">City / District *</label>
+                  <input type="text" id="input-labour-city" class="m3-input no-icon" placeholder="e.g. Jaipur" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="input-labour-village">Village / Area</label>
+                  <input type="text" id="input-labour-village" class="m3-input no-icon" placeholder="e.g. Amer" />
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-address">Full Address / Landmark</label>
+                <input type="text" id="input-labour-address" class="m3-input no-icon" placeholder="Near Old Bus Stand" />
+              </div>
+
+              <!-- Availability Status -->
+              <div class="form-group">
+                <label class="form-label" for="input-labour-status">Availability Status (उपलब्धता स्थिति)</label>
+                <select id="input-labour-status" class="m3-select no-icon">
+                  <option value="available">🟢 Available for Work (उपलब्ध)</option>
+                  <option value="busy">🔴 Currently Busy (व्यस्त)</option>
+                  <option value="na">🟡 Not Available (अनुपलब्ध)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn-m3-primary" style="margin-top: 10px;">
+                <i class="fa-solid fa-circle-check"></i> Register Labour Profile (सुरक्षित करें)
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- 7. PROFILE & SETTINGS SCREEN -->
+        <div id="screen-profile" class="screen-view">
+          
+          <!-- User Profile Card -->
+          <div class="m3-card" style="text-align: center; padding: 20px 16px;">
+            <div class="profile-avatar-large">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h2 id="profile-user-name" style="font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Profile</h2>
+            <div id="profile-user-email" style="font-size: 12px; color: #64748b; margin-bottom: 4px;">Contractor Account</div>
+            <span id="profile-user-mobile" class="status-pill status-available" style="font-size: 11px;">
+              <i class="fa-solid fa-shield-halved"></i> Active Account
+            </span>
+          </div>
+
+          <!-- Profile Actions Menu -->
+          <div class="profile-menu-list">
+            
+            <!-- My Subscription Entry Point -->
+            <button class="profile-menu-item" id="btn-my-subscription-entry" onclick="window.DhadiSubscription.openMySubscriptionModal()" style="border-left: 3.5px solid #ea580c; background: #fffaf5;">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #ffedd5; color: #ea580c;">
+                  <i class="fa-solid fa-crown"></i>
+                </div>
+                <div style="text-align: left;">
+                  <div style="font-weight: 800; color: #0f172a; font-size: 14.5px;">My Subscription (सब्सक्रिप्शन)</div>
+                  <div id="profile-sub-summary" style="font-size: 11px; color: #64748b; font-weight: 600;">Free Plan • View Plans & Status</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="profile-sub-pill" class="sub-badge sub-badge-free" style="font-size: 10px; padding: 2px 8px;">FREE</span>
+                <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+              </div>
+            </button>
+
+            <!-- Admin & Payment Verification Portal -->
+            <button class="profile-menu-item" id="btn-admin-portal-entry" onclick="window.DhadiSubscription.openAdminSubscriptionModal()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #f1f5f9; color: #334155;">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div style="text-align: left;">
+                  <div style="font-weight: 800; color: #0f172a; font-size: 14px;">Admin & Payment Approvals</div>
+                  <div style="font-size: 11px; color: #64748b; font-weight: normal;">Verify UTR, approve subscriptions & metrics</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span id="admin-pending-pill" class="admin-badge-count" style="display: none;">0</span>
+                <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+              </div>
+            </button>
+
+            <button class="profile-menu-item" onclick="window.DhadiApp.openEditProfileModal()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #e0f2fe; color: #0284c7;">
+                  <i class="fa-solid fa-user-pen"></i>
+                </div>
+                <span>Edit Profile</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </button>
+
+            <button class="profile-menu-item" onclick="window.DhadiApp.openMyLabourModal()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #dcfce7; color: #16a34a;">
+                  <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <span>My Labour (मेरे जोड़े गए मज़दूर)</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </button>
+
+            <button class="profile-menu-item" onclick="window.DhadiApp.openDhadiHistoryModal()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #fef3c7; color: #d97706;">
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <span>Dhadi History & Ledgers (पुराना हिसाब)</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </button>
+
+            <button class="profile-menu-item" onclick="window.DhadiApp.toggleLanguage()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #f3e8ff; color: #9333ea;">
+                  <i class="fa-solid fa-language"></i>
+                </div>
+                <span>Change Language (भाषा बदलें)</span>
+              </div>
+              <span style="font-size: 12px; font-weight: 700; color: #9333ea;">English / हिंदी</span>
+            </button>
+
+            <button class="profile-menu-item" onclick="window.DhadiApp.openChangePasswordModal()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #f1f5f9; color: #475569;">
+                  <i class="fa-solid fa-key"></i>
+                </div>
+                <span>Change Password</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </button>
+
+            <button class="profile-menu-item" style="color: #dc2626;" onclick="window.DhadiApp.handleLogout()">
+              <div class="menu-left">
+                <div class="menu-icon" style="background: #fee2e2; color: #dc2626;">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </div>
+                <span style="color: #dc2626; font-weight: 700;">Logout (लॉगआउट)</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #fca5a5; font-size: 12px;"></i>
+            </button>
+
+          </div>
+
+          <!-- App Version / Sketchware Compatibility Notice -->
+          <div style="text-align: center; padding: 12px; font-size: 11px; color: #94a3b8;">
+            Dhadi Wala v1.2.0 • Android Native WebView & HopWeb Ready<br>
+            Powered by Firebase Cloud Engine (dhadi-wala)
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- Android Bottom Navigation Bar (5 Tabs) -->
+      <nav class="android-nav-bar" style="display: none;">
+        
+        <button class="nav-item active" data-tab="home" onclick="window.DhadiApp.navigateToTab('home')">
+          <div class="nav-pill">
+            <i class="fa-solid fa-house"></i>
+          </div>
+          <span class="nav-label">Home</span>
+        </button>
+
+        <button class="nav-item" data-tab="labour-live" onclick="window.DhadiApp.navigateToTab('labour-live')">
+          <div class="nav-pill">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <span class="nav-label">Labour Live</span>
+        </button>
+
+        <button class="nav-item" data-tab="dhadi-register" onclick="window.DhadiApp.navigateToTab('dhadi-register')">
+          <div class="nav-pill">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <span class="nav-label">Dhadi Lekhna</span>
+        </button>
+
+        <button class="nav-item" data-tab="labour-add" onclick="window.DhadiApp.navigateToTab('labour-add')">
+          <div class="nav-pill">
+            <i class="fa-solid fa-circle-plus"></i>
+          </div>
+          <span class="nav-label">Labour Add</span>
+        </button>
+
+        <button class="nav-item" data-tab="profile" onclick="window.DhadiApp.navigateToTab('profile')">
+          <div class="nav-pill">
+            <i class="fa-solid fa-user-gear"></i>
+          </div>
+          <span class="nav-label">Profile</span>
+        </button>
+
+      </nav>
+
+      <!-- MODALS & BOTTOM SHEETS -->
+
+      <!-- 1. Labour Detail Bottom Sheet -->
+      <div id="modal-labour-detail" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeLabourDetail()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <div id="labour-detail-content">
+            <!-- Dynamic Content -->
+          </div>
+          <button class="btn-m3-outline" style="margin-top: 10px;" onclick="window.DhadiApp.closeLabourDetail()">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Dhadi History Modal -->
+      <div id="modal-dhadi-history" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeDhadiHistoryModal()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Saved Dhadi Registers (पुराना हिसाब)</h3>
+          <div id="dhadi-history-list" style="max-height: 55vh; overflow-y: auto; margin-bottom: 14px;">
+            <!-- Rendered by JS -->
+          </div>
+          <button class="btn-m3-outline" onclick="window.DhadiApp.closeDhadiHistoryModal()">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. My Labour Modal -->
+      <div id="modal-my-labour" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeMyLabourModal()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 4px;">My Registered Labour</h3>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Manage workers and update their live availability</p>
+          <div id="my-labour-list" style="max-height: 55vh; overflow-y: auto; margin-bottom: 14px;">
+            <!-- Rendered by JS -->
+          </div>
+          <button class="btn-m3-outline" onclick="window.DhadiApp.closeMyLabourModal()">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Edit Profile Modal -->
+      <div id="modal-edit-profile" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeEditProfileModal()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 14px;">Edit Profile Information</h3>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="edit-profile-name" class="m3-input no-icon" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email ID</label>
+            <input type="email" id="edit-profile-email" class="m3-input no-icon" disabled />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" id="edit-profile-mobile" class="m3-input no-icon" />
+          </div>
+          <button class="btn-m3-primary" style="margin-bottom: 8px;" onclick="window.DhadiApp.saveUserProfile()">
+            <i class="fa-solid fa-check"></i> Save Changes
+          </button>
+          <button class="btn-m3-outline" onclick="window.DhadiApp.closeEditProfileModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- 5. Change Password Modal -->
+      <div id="modal-change-password" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeChangePasswordModal()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 14px;">Change Account Password</h3>
+          <form id="form-change-password" onsubmit="window.DhadiApp.handleChangePassword(event)">
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" id="input-new-password" class="m3-input no-icon" required minlength="6" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" id="input-confirm-password" class="m3-input no-icon" required minlength="6" />
+            </div>
+            <button type="submit" class="btn-m3-primary" style="margin-bottom: 8px;">
+              <i class="fa-solid fa-lock"></i> Update Password
+            </button>
+            <button type="button" class="btn-m3-outline" onclick="window.DhadiApp.closeChangePasswordModal()">
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- 6. Cloud Sync & Data Backup Modal -->
+      <div id="modal-backup-sync" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeBackupModal()">
+        <div class="modal-sheet">
+          <div class="sheet-handle"></div>
+          <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 6px;">Firebase Cloud & Offline Storage</h3>
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">
+            Target Project: <strong>dhadi-wala</strong><br>
+            Database: Realtime Database + LocalStorage Resilience
+          </p>
+          <div style="background: #f8fafc; border-radius: 8px; padding: 12px; font-size: 12px; color: #334155; margin-bottom: 16px;">
+            <div style="font-weight: 700; margin-bottom: 4px;">Export for Sketchware / HopWeb:</div>
+            Download full JSON database of all labours and dhadi records to transfer between devices.
+          </div>
+          <button class="btn-m3-primary" style="margin-bottom: 10px;" onclick="window.DhadiApp.exportAppDataJSON()">
+            <i class="fa-solid fa-file-arrow-down"></i> Export Full Backup JSON
+          </button>
+          <button class="btn-m3-outline" onclick="window.DhadiApp.closeBackupModal()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- 7. Android Center Confirmation Dialog -->
+      <div id="modal-confirm-dialog" class="modal-backdrop">
+        <div class="modal-center-dialog">
+          <h3 id="confirm-dialog-title" style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Confirmation</h3>
+          <p id="confirm-dialog-message" style="font-size: 13px; color: #475569; margin-bottom: 20px;">Are you sure you want to proceed?</p>
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn-m3-outline" style="width: auto; padding: 8px 16px;" onclick="window.DhadiApp.closeConfirmDialog()">Cancel</button>
+            <button id="confirm-dialog-btn" class="btn-m3-primary" style="width: auto; padding: 8px 18px; background: #dc2626;">Confirm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Printable Dhadi Receipt & Voucher Modal -->
+      <div id="modal-print-receipt" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeReceiptModal()">
+        <div class="modal-sheet" style="max-height: 88vh; overflow-y: auto; padding: 16px 14px 24px 14px;">
+          <div class="sheet-handle"></div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div>
+              <h3 style="font-size: 17px; font-weight: 800; color: #0f172a;">Dhadi Payment Slip (हाजिरी रसीद)</h3>
+              <p style="font-size: 11px; color: #64748b;">Official record receipt for worker settlement</p>
+            </div>
+            <button class="icon-btn-ghost receipt-modal-close-btn" onclick="window.DhadiApp.closeReceiptModal()" title="Close Receipt">
+              <i class="fa-solid fa-xmark" style="font-size: 16px;"></i>
+            </button>
+          </div>
+
+          <!-- Printable Receipt Content Area -->
+          <div id="receipt-modal-body" style="margin-bottom: 16px;">
+            <!-- Rendered by receipt.js -->
+          </div>
+
+          <!-- Receipt Actions -->
+          <div class="receipt-modal-actions" style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-m3-primary" id="btn-download-pdf" onclick="window.DhadiApp.downloadReceiptPDFAction()" style="padding: 10px 8px; font-size: 13px;">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
+              </button>
+              <button class="btn-m3-tonal" id="btn-print-slip" onclick="window.DhadiApp.printReceiptAction()" style="padding: 10px 8px; font-size: 13px; background: #0284c7; color: white;">
+                <i class="fa-solid fa-print"></i> Print Slip
+              </button>
+            </div>
+
+            <button class="btn-m3-tonal" style="background: #25d366; color: white; padding: 10px; font-size: 13px;" onclick="window.DhadiApp.shareDhadiWhatsApp()">
+              <i class="fa-brands fa-whatsapp"></i> Share Slip on WhatsApp
+            </button>
+
+            <button class="btn-m3-outline" style="padding: 8px;" onclick="window.DhadiApp.closeReceiptModal()">
+              Close Receipt
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 9. Install Android App / APK Modal -->
+      <div id="modal-install-app" class="modal-backdrop" onclick="if(event.target === this) window.DhadiApp.closeInstallModal()">
+        <div class="modal-sheet" style="max-height: 85vh; overflow-y: auto;">
+          <div class="sheet-handle"></div>
+          
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div style="width: 56px; height: 56px; background: #ea580c; color: white; border-radius: 14px; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto;">
+              <i class="fa-brands fa-android"></i>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">Dhadi Wala Android APK</h3>
+            <p style="font-size: 12px; color: #64748b;">Direct Android Package File (.apk) for Mobile</p>
+          </div>
+
+          <!-- DIRECT APK DOWNLOAD (Built & Signed) -->
+          <div class="m3-card" style="padding: 14px 16px; margin-bottom: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+              <div style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                <i class="fa-solid fa-cloud-arrow-down"></i>
+              </div>
+              <div>
+                <strong style="font-size: 15px; font-weight: 800; display: block;">Direct APK File (41 KB)</strong>
+                <span style="font-size: 11px; opacity: 0.9;">Compiled & Signed with Android Keystore</span>
+              </div>
+            </div>
+            <p style="font-size: 12px; margin-bottom: 12px; line-height: 1.4; opacity: 0.95;">
+              Aapki official Android APK file direct download ke liye bilkul taiyar hai. Button par tap karein aur phone me install karein:
+            </p>
+            <button type="button" onclick="window.DhadiApp.downloadDhadiApk()" class="btn-m3-primary" style="background: #ffffff; color: #c2410c; font-weight: 800; border: none; cursor: pointer; width: 100%; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+              <i class="fa-brands fa-android" style="font-size: 18px;"></i>
+              Download DhadiWala.apk (Direct)
+            </button>
+          </div>
+
+          <!-- Method 1: Instant Install on Android Device (PWA) -->
+          <div class="m3-card" style="padding: 12px 14px; margin-bottom: 12px; background: #f0fdf4; border-color: #bbf7d0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="background: #16a34a; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">1</span>
+              <strong style="font-size: 13px; color: #166534;">Direct Mobile Install (Direct App)</strong>
+            </div>
+            <p style="font-size: 12px; color: #374151; margin-bottom: 8px; line-height: 1.4;">
+              Android Chrome browser me upar <strong>⋮ (3 dots)</strong> par tap karein aur <strong>"Install app"</strong> ya <strong>"Add to Home screen"</strong> chunein. App bina Play Store ke aapke mobile me install ho jayegi!
+            </p>
+            <button id="btn-pwa-install-trigger" class="btn-m3-primary" style="background: #16a34a; padding: 10px;" onclick="window.DhadiApp.triggerPWAInstall()">
+              <i class="fa-solid fa-download"></i> Install App on This Device
+            </button>
+          </div>
+
+          <!-- Method 2: Convert to Standalone APK File -->
+          <div class="m3-card" style="padding: 12px 14px; margin-bottom: 12px; background: #eff6ff; border-color: #bfdbfe;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="background: #2563eb; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">2</span>
+              <strong style="font-size: 13px; color: #1e40af;">Ready-made APK File Download</strong>
+            </div>
+            <p style="font-size: 12px; color: #374151; margin-bottom: 8px; line-height: 1.4;">
+              Apne app link ko <strong>PWABuilder</strong> ya <strong>WebIntoApp</strong> me daal kar 1-minute me direct signed <strong>.apk</strong> file download karein:
+            </p>
+            <div style="background: #ffffff; border: 1px dashed #93c5fd; border-radius: 6px; padding: 8px; margin-bottom: 10px;">
+              <div style="font-size: 10px; color: #64748b; font-weight: 700; margin-bottom: 2px;">YOUR LIVE APP URL:</div>
+              <div id="live-app-url-box" style="font-size: 11px; color: #1e40af; word-break: break-all; font-family: monospace;"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-m3-outline" style="font-size: 12px; padding: 8px;" onclick="window.DhadiApp.copyAppURL()">
+                <i class="fa-regular fa-copy"></i> Copy App URL
+              </button>
+              <a href="https://www.pwabuilder.com/" target="_blank" class="btn-m3-primary" style="font-size: 12px; padding: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px; background: #2563eb;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open PWABuilder
+              </a>
+            </div>
+          </div>
+
+          <!-- Method 3: Sketchware & HopWeb -->
+          <div class="m3-card" style="padding: 12px 14px; margin-bottom: 16px; background: #fff7ed; border-color: #fed7aa;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="background: #ea580c; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800;">3</span>
+              <strong style="font-size: 13px; color: #9a3412;">Sketchware / HopWeb me APK banana</strong>
+            </div>
+            <p style="font-size: 11px; color: #475569; margin-bottom: 6px;">
+              Sketchware me ek <strong>WebView</strong> widget add karein aur usme ye code lagayein:
+            </p>
+            <pre style="background: #1e293b; color: #38bdf8; padding: 8px; border-radius: 6px; font-size: 11px; overflow-x: auto; margin: 0;">webview1.loadUrl("https://ais-pre-xt74lynrjnulfrab6pkp6w-924795716966.asia-southeast1.run.app");
+webview1.getSettings().setJavaScriptEnabled(true);
+webview1.getSettings().setDomStorageEnabled(true);</pre>
+          </div>
+
+          <button class="btn-m3-outline" onclick="window.DhadiApp.closeInstallModal()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           SUBSCRIPTION & PAYMENT MODALS
+           ========================================== -->
+
+      <!-- 1. My Subscription Modal (Android Sheet Style) -->
+      <div id="modal-my-subscription" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closeMySubscriptionModal()">
+        <div class="modal-sheet" style="max-height: 90vh; overflow-y: auto;">
+          <div class="sheet-handle"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="brand-logo-circle" style="width: 32px; height: 32px; font-size: 16px; background: #ffedd5; color: #ea580c;">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">My Subscription (सब्सक्रिप्शन)</h3>
+            </div>
+            <button type="button" class="icon-btn-ghost" style="color: #64748b; font-size: 18px;" onclick="window.DhadiSubscription.closeMySubscriptionModal()">
+              ✕
+            </button>
+          </div>
+
+          <div id="my-subscription-content">
+            <!-- Dynamic Content populated by renderMySubscriptionView -->
+          </div>
+
+          <button type="button" class="btn-m3-outline" style="width: 100%; margin-top: 14px;" onclick="window.DhadiSubscription.closeMySubscriptionModal()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Choose Your Plan Modal -->
+      <div id="modal-choose-plan" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closeChoosePlanModal()">
+        <div class="modal-sheet" style="max-height: 92vh; overflow-y: auto;">
+          <div class="sheet-handle"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">
+              <i class="fa-solid fa-crown" style="color: #ea580c; margin-right: 6px;"></i> Premium Plans
+            </h3>
+            <button type="button" class="icon-btn-ghost" style="color: #64748b; font-size: 18px;" onclick="window.DhadiSubscription.closeChoosePlanModal()">
+              ✕
+            </button>
+          </div>
+
+          <div id="choose-plan-content">
+            <!-- Dynamic Plans Content -->
+          </div>
+
+          <button type="button" class="btn-m3-outline" style="width: 100%; margin-top: 10px;" onclick="window.DhadiSubscription.closeChoosePlanModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. QR Payment Screen (with 5-Minute Timer & Confirmation) -->
+      <div id="modal-payment-screen" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closePaymentScreen()">
+        <div class="modal-sheet" style="max-height: 94vh; overflow-y: auto;">
+          <div class="sheet-handle"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-qrcode" style="color: #ea580c; font-size: 20px;"></i>
+              <h3 style="font-size: 17px; font-weight: 800; color: #0f172a;">UPI QR Payment</h3>
+            </div>
+            <button type="button" class="icon-btn-ghost" style="color: #64748b; font-size: 18px;" onclick="window.DhadiSubscription.closePaymentScreen()">
+              ✕
+            </button>
+          </div>
+
+          <div id="payment-screen-content">
+            <!-- Dynamic QR Payment View -->
+          </div>
+
+          <button type="button" class="btn-m3-outline" style="width: 100%; margin-top: 10px;" onclick="window.DhadiSubscription.closePaymentScreen()">
+            Back
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Payment Under Review / Status Modal -->
+      <div id="modal-payment-status" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closePaymentStatusModal()">
+        <div class="modal-dialog" style="max-width: 420px;">
+          <div id="payment-status-modal-content">
+            <!-- Dynamic Status View -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Admin Subscription & Payment Approvals Modal -->
+      <div id="modal-admin-subscriptions" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closeAdminSubscriptionModal()">
+        <div class="modal-sheet" style="max-height: 92vh; overflow-y: auto;">
+          <div class="sheet-handle"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 32px; height: 32px; background: #0f172a; color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">Admin Subscription Portal</h3>
+            </div>
+            <button type="button" class="icon-btn-ghost" style="color: #64748b; font-size: 18px;" onclick="window.DhadiSubscription.closeAdminSubscriptionModal()">
+              ✕
+            </button>
+          </div>
+
+          <div id="admin-subscriptions-content">
+            <!-- Dynamic Admin Content -->
+          </div>
+
+          <button type="button" class="btn-m3-outline" style="width: 100%; margin-top: 14px;" onclick="window.DhadiSubscription.closeAdminSubscriptionModal()">
+            Exit Admin Portal
+          </button>
+        </div>
+      </div>
+
+      <!-- 6. Premium Gatekeeper Upgrade Dialog -->
+      <div id="modal-premium-gate" class="modal-backdrop" onclick="if(event.target === this) window.DhadiSubscription.closePremiumGateModal()">
+        <div class="modal-dialog" style="max-width: 380px; text-align: center; padding: 24px 20px;">
+          <div style="width: 60px; height: 60px; background: #ffedd5; color: #ea580c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 14px;">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+          <h3 id="premium-gate-title" style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">
+            Premium Feature
+          </h3>
+          <p id="premium-gate-desc" style="font-size: 13px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">
+            This feature requires an active subscription.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button type="button" class="btn-m3-primary" style="font-weight: 800; padding: 12px;" onclick="window.DhadiSubscription.closePremiumGateModal(); window.DhadiSubscription.openChoosePlanModal();">
+              <i class="fa-solid fa-crown"></i> View Plans (₹29 / ₹199)
+            </button>
+            <button type="button" class="btn-m3-outline" style="font-weight: 600; padding: 10px;" onclick="window.DhadiSubscription.closePremiumGateModal()">
+              Not Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast / Snackbar -->
+      <div id="app-snackbar">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Success</span>
+      </div>
+
+    </div>
+
+    <!-- Preloaded APK data for 100% reliable instant client-side blob download -->
+    <script src="/apk-data.js"></script>
+
+    <!-- Application Script Entry Point -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

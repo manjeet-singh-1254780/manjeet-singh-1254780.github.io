@@ -1,0 +1,6 @@
+{
+  "name": "Dhadi Wala",
+  "description": "Modern mobile-first labour discovery and digital dhadi workforce management platform for India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

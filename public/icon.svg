@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)"/>
+  <!-- Safety Helmet Icon -->
+  <path d="M256 120 C180 120 120 176 120 252 L120 276 C120 286 128 294 138 294 L374 294 C384 294 392 286 392 276 L392 252 C392 176 332 120 256 120 Z" fill="#ffffff"/>
+  <path d="M96 286 C96 276 104 268 114 268 L398 268 C408 268 416 276 416 286 L416 304 C416 318 404 330 390 330 L122 330 C108 330 96 318 96 304 Z" fill="#ffedd5"/>
+  <path d="M236 120 L236 268 L276 268 L276 120 Z" fill="#f97316"/>
+  <!-- Bottom banner badge -->
+  <rect x="110" y="360" width="292" height="54" rx="27" fill="#ffffff"/>
+  <text x="256" y="396" font-family="Arial, sans-serif" font-weight="900" font-size="28" fill="#c2410c" text-anchor="middle" letter-spacing="1">DHADI WALA</text>
+</svg>

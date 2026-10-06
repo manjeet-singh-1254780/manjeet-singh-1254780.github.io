@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>धाड़ी वाला (Dhadi Wala) - Download & Install</title>
+  <link rel="icon" type="image/png" href="/icon-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#d97706">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="/apk-data.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #f1f5f9; color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+    .card { background: #ffffff; width: 100%; max-width: 440px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); padding: 28px 20px; text-align: center; border: 1px solid #e2e8f0; }
+    .app-icon { width: 90px; height: 90px; border-radius: 22px; box-shadow: 0 8px 20px rgba(217, 119, 6, 0.25); margin: 0 auto 16px; display: block; object-fit: cover; }
+    h1 { font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+    p.sub { font-size: 14px; color: #64748b; margin-bottom: 24px; line-height: 1.4; }
+    
+    .btn-apk-primary {
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+      margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+    .btn-apk-primary:active { transform: scale(0.98); }
+
+    .btn-pwa-sec {
+      background: #f8fafc;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 16px;
+      border: 1.5px solid #cbd5e1;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+    .btn-pwa-sec:active { background: #e2e8f0; }
+
+    .status-badge {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      text-align: left;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+    .status-success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .guide-card {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .guide-header {
+      font-size: 13px;
+      font-weight: 800;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .step-row {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: #78350f;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .step-num {
+      background: #fde68a;
+      color: #78350f;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .app-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      color: #ea580c;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #fff7ed;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="/icon-192.png" alt="Dhadi Wala Logo" class="app-icon">
+    <h1>धाड़ी वाला (Dhadi Wala)</h1>
+    <p class="sub">ठेकेदार और मजदूरों के दैनिक हिसाब-किताब की मोबाइल ऐप</p>
+
+    <!-- BUTTON 1: DIRECT APK DOWNLOAD (Client-side Blob - 0% Failure / No 404) -->
+    <button id="btn-apk-download" class="btn-apk-primary" type="button" onclick="downloadApkDirect()">
+      <i class="fa-brands fa-android" style="font-size: 22px;"></i>
+      <div style="text-align: left;">
+        <div style="font-size: 16px; line-height: 1.1;">Direct Download APK</div>
+        <div style="font-size: 11px; opacity: 0.9; font-weight: normal; margin-top: 2px;">DhadiWala.apk (41 KB)</div>
+      </div>
+    </button>
+
+    <!-- Download Success Banner -->
+    <div id="apk-success-banner" class="status-badge status-success">
+      <div style="display: flex; gap: 10px; align-items: flex-start;">
+        <i class="fa-solid fa-circle-check" style="color: #16a34a; font-size: 18px; margin-top: 2px;"></i>
+        <div>
+          <strong>DhadiWala.apk download ho gayi hai!</strong><br>
+          Phone ki notification bar ya <b>Files / Downloads</b> folder kholein aur <b>DhadiWala.apk</b> par tap karke <b>Install</b> karein.
+        </div>
+      </div>
+    </div>
+
+    <!-- BUTTON 2: DOWNLOAD COMPLETE SINGLE HTML FILE -->
+    <button id="btn-html-download" class="btn-pwa-sec" type="button" onclick="downloadHtmlDirect()" style="border-color: #3b82f6; background: #eff6ff; color: #1d4ed8; margin-bottom: 12px;">
+      <i class="fa-solid fa-file-code" style="color: #2563eb; font-size: 18px;"></i>
+      <div style="text-align: left;">
+        <div style="font-size: 15px; font-weight: 700; line-height: 1.1;">Download Full HTML File</div>
+        <div style="font-size: 11px; opacity: 0.85; font-weight: normal; margin-top: 2px;">DhadiWala_App.html (Pura Offline Code)</div>
+      </div>
+    </button>
+
+    <div id="html-success-banner" class="status-badge status-success" style="background: #eff6ff; border-color: #bfdbfe; color: #1e40af;">
+      <div style="display: flex; gap: 10px; align-items: flex-start;">
+        <i class="fa-solid fa-circle-check" style="color: #2563eb; font-size: 18px; margin-top: 2px;"></i>
+        <div>
+          <strong>DhadiWala_App.html download ho gaya!</strong><br>
+          Isko apne phone ya kisi bhi browser me direct click karke bina internet ke chala sakte hain.
+        </div>
+      </div>
+    </div>
+
+    <!-- BUTTON 3: 1-Tap Mobile Install (PWA) -->
+    <button id="btn-pwa-install" class="btn-pwa-sec" type="button" onclick="handlePWAInstall()">
+      <i class="fa-solid fa-mobile-screen-button" style="color: #ea580c; font-size: 18px;"></i>
+      <span>Install App on Phone (Home Screen)</span>
+    </button>
+
+    <!-- PWA Guide Banner -->
+    <div id="pwa-guide-box" class="guide-card" style="display: none; animation: fadeIn 0.3s ease;">
+      <div class="guide-header">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Mobile par direct app kaise lagayein:</span>
+      </div>
+      <div class="step-row">
+        <span class="step-num">1</span>
+        <span>Chrome browser me sabse upar <b>3-dots (⋮)</b> par tap karein.</span>
+      </div>
+      <div class="step-row">
+        <span class="step-num">2</span>
+        <span>Menu me <b>"Install app"</b> ya <b>"Add to Home screen" (होम स्क्रीन में जोड़ें)</b> par tap karein.</span>
+      </div>
+      <div class="step-row">
+        <span class="step-num">3</span>
+        <span>App bina Play Store ke seedha aapke phone me install ho jayegi!</span>
+      </div>
+    </div>
+
+    <!-- Important Tip for APK -->
+    <div class="guide-card" style="background: #f8fafc; border-color: #e2e8f0; margin-bottom: 8px;">
+      <div class="guide-header" style="color: #475569;">
+        <i class="fa-solid fa-lightbulb" style="color: #eab308;"></i>
+        <span>APK Install karne ki tip:</span>
+      </div>
+      <p style="font-size: 12px; color: #64748b; line-height: 1.5;">
+        Agar APK click karne par code/text dikhe, toh phone ke <b>Files / File Manager</b> app me jayein, <b>Downloads</b> folder se <b>DhadiWala.apk</b> par tap karein.
+      </p>
+    </div>
+
+    <div>
+      <a href="/" class="app-link-btn">
+        <i class="fa-solid fa-arrow-left"></i> Open Dhadi Wala App
+      </a>
+    </div>
+  </div>
+
+  <script>
+    let deferredPrompt = null;
+    const pwaBtn = document.getElementById('btn-pwa-install');
+    const pwaGuide = document.getElementById('pwa-guide-box');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (pwaBtn) {
+        pwaBtn.style.background = '#f0fdf4';
+        pwaBtn.style.borderColor = '#bbf7d0';
+        pwaBtn.style.color = '#166534';
+      }
+    });
+
+    function handlePWAInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            pwaBtn.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <span>App Installed!</span>';
+          }
+          deferredPrompt = null;
+        });
+      } else {
+        if (pwaGuide) {
+          pwaGuide.style.display = pwaGuide.style.display === 'none' ? 'block' : 'none';
+        }
+      }
+    }
+
+    function downloadApkDirect() {
+      const btn = document.getElementById('btn-apk-download');
+      const banner = document.getElementById('apk-success-banner');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size: 20px;"></i> <span>Downloading APK...</span>';
+
+      try {
+        const b64 = window.DHADI_APK_BASE64;
+        if (b64) {
+          const byteCharacters = atob(b64);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'application/vnd.android.package-archive' });
+          const url = URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'DhadiWala.apk';
+          document.body.appendChild(a);
+          a.click();
+          
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            btn.innerHTML = '<i class="fa-brands fa-android" style="font-size: 22px;"></i> <div style="text-align: left;"><div style="font-size: 16px; line-height: 1.1;">Download Again</div><div style="font-size: 11px; opacity: 0.9;">DhadiWala.apk</div></div>';
+            if (banner) banner.style.display = 'block';
+          }, 600);
+          return;
+        }
+      } catch (err) {
+        console.error("Base64 download error:", err);
+      }
+
+      // Fallback to fetch
+      fetch('/DhadiWala.apk')
+        .then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'DhadiWala.apk';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            btn.innerHTML = '<i class="fa-brands fa-android" style="font-size: 22px;"></i> <span>Download Again</span>';
+            if (banner) banner.style.display = 'block';
+          }, 800);
+        })
+        .catch(e => {
+          alert('Download error: ' + e.message);
+          btn.innerHTML = '<i class="fa-brands fa-android" style="font-size: 22px;"></i> <span>Retry Download</span>';
+        });
+    }
+
+    function downloadHtmlDirect() {
+      const btn = document.getElementById('btn-html-download');
+      const banner = document.getElementById('html-success-banner');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size: 18px;"></i> <span>Downloading HTML...</span>';
+
+      fetch('/DhadiWala.html')
+        .then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'DhadiWala_App.html';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            btn.innerHTML = '<i class="fa-solid fa-file-code" style="color: #2563eb; font-size: 18px;"></i> <div style="text-align: left;"><div style="font-size: 15px; font-weight: 700; line-height: 1.1;">Download Again</div><div style="font-size: 11px; opacity: 0.85; font-weight: normal; margin-top: 2px;">DhadiWala_App.html</div></div>';
+            if (banner) banner.style.display = 'block';
+          }, 600);
+        })
+        .catch(err => {
+          alert('HTML Download error: ' + err.message);
+          btn.innerHTML = '<i class="fa-solid fa-file-code" style="color: #2563eb; font-size: 18px;"></i> <span>Retry Download HTML</span>';
+        });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (pwaBtn) {
+        pwaBtn.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <span>App Installed!</span>';
+        pwaBtn.style.background = '#f0fdf4';
+      }
+    });
+  </script>
+</body>
+</html>
